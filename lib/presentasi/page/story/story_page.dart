@@ -1,9 +1,9 @@
+import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:story_app/domain/model/all_story.dart';
-import 'package:story_app/domain/usecase/get_all_story/get_all_story_usecase.dart';
-import 'package:story_app/presentasi/provider/usecase/get_all_story.dart';
+import 'package:story_app/presentasi/provider/story/story_all_list.dart';
 import 'package:story_app/presentasi/router/router_provider.dart';
+import 'package:story_app/presentasi/widget/list_story_item.dart';
 
 class StoryPage extends ConsumerStatefulWidget {
   const StoryPage({super.key});
@@ -13,131 +13,118 @@ class StoryPage extends ConsumerStatefulWidget {
 }
 
 class _StoryPageState extends ConsumerState<StoryPage> {
+  late EasyRefreshController _refreshController;
   final ScrollController _scrollController = ScrollController();
-  List<ListStory> _stories = [];
-  bool _isLoading = false;
-  int _page = 0;
-  final int _limit = 10;
+
+  var page = 1;
 
   @override
   void initState() {
+    _refreshController = EasyRefreshController();
+    Future.microtask(() => ref.read(storyProvider).getAllStory(reset: true));
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels >=
+          _scrollController.position.maxScrollExtent) {
+        if (ref.read(storyProvider).isEndPage == false &&
+            ref.read(storyProvider).listStoryLoading == false) {
+          ref.read(storyProvider).getAllStory(page: page + 1);
+          setState(() {
+            page++;
+          });
+        }
+      }
+    });
+
     super.initState();
-    _loadStories();
-    _scrollController.addListener(_onScroll);
+  }
+
+  Future _onRefresh() async {
+    setState(() {
+      page = 1;
+    });
+    await ref.read(storyProvider).getAllStory(reset: true);
+    if (!mounted) {
+      return;
+    }
+
+    _refreshController.finishRefresh(IndicatorResult.success, true);
+
+    return;
   }
 
   @override
   void dispose() {
+    _refreshController.dispose();
     _scrollController.dispose();
     super.dispose();
   }
 
-  void _onScroll() {
-    if (_scrollController.position.pixels ==
-            _scrollController.position.maxScrollExtent &&
-        !_isLoading) {
-      _loadStories();
-    }
-  }
-
-  Future<void> _loadStories() async {
-    setState(() {
-      _isLoading = true;
-    });
-
-    try {
-      GetAllStoryUsecase story = ref.read(getAllStoryUsecaseProvider);
-      var result = await story(_page);
-
-      if (result.error != true) {
-        setState(() {
-          _stories.addAll(result.listStory);
-          _page++;
-        });
-      } else {
-        throw Exception("Error fetching stories");
-      }
-    } catch (e) {
-      print(e);
-    } finally {
-      setState(() {
-        _isLoading = false;
-      });
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    var width = MediaQuery.of(context).size.width;
-    var height = MediaQuery.of(context).size.height;
+    final storyRef = ref.watch(storyProvider);
+    final width = MediaQuery.of(context).size.width;
+    final height = MediaQuery.of(context).size.height;
+
     return Scaffold(
-      body: _stories.isEmpty && _isLoading
-          ? const Center(child: Text("data"))
-          : ListView.builder(
-              controller: _scrollController,
-              itemCount: _stories.length + (_isLoading ? 1 : 0),
-              itemBuilder: (context, index) {
-                if (index < _stories.length) {
-                  if (index == _stories.length && _stories != null) {
-                    return const Center(
-                      child: Padding(
-                        padding: EdgeInsets.all(8),
-                        child: CircularProgressIndicator(),
-                      ),
-                    );
-                  }
-                  return GestureDetector(
-                    onTap: () {
-                      ref.read(routerProvider).pushNamed(
-                            "Detail",
-                            extra: _stories[index].id,
-                          );
-                    },
-                    child: Container(
-                      margin: EdgeInsets.only(
-                          bottom: height * 0.02,
-                          left: width * 0.05,
-                          right: width * 0.05),
-                      decoration: const BoxDecoration(
-                        color: Color(0xffEEEEEE),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Image.network(
-                            _stories[index].photoUrl,
-                            fit: BoxFit.cover,
-                            width: width,
-                            height: height * 0.2,
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(
-                              left: width * 0.02,
-                              right: width * 0.05,
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(_stories[index].name),
-                                Align(
-                                  alignment: Alignment.topRight,
-                                  child: Text(
-                                    _stories[index].createdAt.toString(),
-                                  ),
-                                ),
-                                Text(_stories[index].description),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
+      floatingActionButton: FloatingActionButton(
+        heroTag: "Create",
+        onPressed: () {
+          ref.read(routerProvider).pushNamed("Create");
+        },
+        child: const Icon(Icons.add),
+      ),
+      body: EasyRefresh(
+        controller: _refreshController,
+        header: const ClassicHeader(),
+        footer: const ClassicFooter(),
+        onRefresh: _onRefresh,
+        child: SingleChildScrollView(
+          controller: _scrollController,
+          child: storyRef.listStory.listStory!.isEmpty &&
+                  !storyRef.listStoryLoading &&
+                  !storyRef.listStoryError
+              ? const Center(
+                  child: Text('No Data'),
+                )
+              : storyRef.listStoryError
+                  ? const Center(child: Text('Database Error!!!'))
+                  : Column(
+                      children: [
+                        ListView.builder(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemCount: storyRef.listStory.listStory!.length,
+                          itemBuilder: (context, index) {
+                            return ListStoryItem(
+                              width: width,
+                              height: height,
+                              key: ValueKey(
+                                  storyRef.listStory.listStory![index]!.id),
+                              id: storyRef.listStory.listStory![index]!.id,
+                              createdAt: storyRef
+                                  .listStory.listStory![index]!.createdAt,
+                              description: storyRef
+                                  .listStory.listStory![index]!.description,
+                              name: storyRef.listStory.listStory![index]!.name,
+                              photoUrl: storyRef
+                                  .listStory.listStory![index]!.photoUrl,
+                            );
+                          },
+                        ),
+                        const SizedBox(height: 10),
+                        ref.watch(storyProvider).listStoryLoading
+                            ? const Center(
+                                child: CircularProgressIndicator(),
+                              )
+                            : ref.watch(storyProvider).isEndPage
+                                ? const Center(
+                                    child: Text("No Data Found"),
+                                  )
+                                : const SizedBox(height: 0)
+                      ],
                     ),
-                  );
-                } else {
-                  return const Center(child: CircularProgressIndicator());
-                }
-              },
-            ),
+        ),
+      ),
     );
   }
 }

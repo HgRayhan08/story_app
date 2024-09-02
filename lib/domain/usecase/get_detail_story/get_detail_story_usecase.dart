@@ -1,7 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:story_app/data/repository/shared_pref_repository.dart';
 import 'package:story_app/data/story/story_data.dart';
-import 'package:story_app/domain/model/detail_story.dart';
+import 'package:story_app/domain/model/detail_story_lama.dart';
 import 'package:story_app/domain/usecase/usecase.dart';
 
 class GetDetailStoryUsecase implements UseCase<DetailStoryModel, String> {

@@ -46,9 +46,29 @@ class _DetailStoryPageState extends ConsumerState<DetailStoryPage> {
                             fontSize: 20, fontWeight: FontWeight.bold),
                       ),
                       SizedBox(height: height * 0.01),
-                      DeskripsiWidget(data: data.name),
+                      Row(
+                        children: [
+                          const Text(
+                            "Name :",
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          Text(
+                            data.name,
+                          ),
+                        ],
+                      ),
                       SizedBox(height: height * 0.02),
-                      DeskripsiWidget(data: data.description),
+                      const Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          "Deskripsi",
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                      Text(
+                        data.description,
+                        textAlign: TextAlign.justify,
+                      ),
                       SizedBox(height: height * 0.02),
                       const Text(
                         "Location",

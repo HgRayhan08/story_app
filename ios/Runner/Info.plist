@@ -9,6 +9,13 @@
 	<string>Explanation for photo library access</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>We need access to your location to create stories.</string>	
+	
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+    <string>The app needs user's location permission</string>
+    <key>NSLocationAlwaysUsageDescription</key>
+    <string>The app needs user's location permission</string>
+    <key>NSLocationWhenInUseUsageDescription</key>
+    <string>The app needs location service permission</string>
 	<!-- end tambahan -->
 	
 	<key>CFBundleDevelopmentRegion</key>

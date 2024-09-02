@@ -5,10 +5,12 @@ import 'package:image/image.dart' as img;
 import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:story_app/domain/model/all_story.dart';
-import 'package:story_app/domain/model/detail_story.dart';
+import 'package:story_app/domain/model/all_story_lama.dart';
+import 'package:story_app/domain/model/api_model.dart';
+import 'package:story_app/domain/model/detail_story_lama.dart';
 import 'package:story_app/domain/usecase/create_story/create_story_usecase.dart';
 import 'package:story_app/domain/usecase/create_story/story_params.dart';
+import 'package:story_app/domain/usecase/get_all_story/all_story_params.dart';
 import 'package:story_app/domain/usecase/get_all_story/get_all_story_usecase.dart';
 import 'package:story_app/domain/usecase/get_detail_story/get_detail_story_usecase.dart';
 import 'package:story_app/presentasi/provider/usecase/create_story_provider.dart';
@@ -22,38 +24,52 @@ part "story_data_provider.g.dart";
 @Riverpod(keepAlive: true)
 class DataStory extends _$DataStory {
   XFile? _photo;
-
+  bool _isLoading = false;
   late GoogleMapController mapController;
   geo.Placemark? placemark;
   late final Set<Marker> markers = {};
 
-  /// todo-04-02: define a placemark to store a location's address
+  List<ListStory> _story = [];
+  ApiModel quotesState = ApiModel.initial;
+
+  int? page = 1;
+  int size = 5;
+
   XFile? get photo => _photo;
+  bool get isLoading => _isLoading;
+
+  Future<List<ListStory>> story() async {
+    final story = await getstory();
+    print(story.length);
+    List<ListStory> listStory = _story;
+    return listStory;
+  }
 
   @override
-  Future<AllStoryModel> build() async {
-    GetAllStoryUsecase story = ref.read(getAllStoryUsecaseProvider);
-    var result = await story(null);
-    if (result.error != true) {
-      return result;
-    } else {
-      throw Exception("Error fetching stories");
-    }
+  FutureOr<String> build() {
+    return "";
   }
 
-  Future<AllStoryModel> getAllStroy() async {
-    GetAllStoryUsecase story = ref.read(getAllStoryUsecaseProvider);
-    var result = await story(null);
-    if (result.error != true) {
-      return result;
-    } else {
-      throw Exception("Error fetching stories");
+  Future<List<ListStory>> getstory() async {
+    if (page == 1) {
+      _isLoading = true;
     }
-  }
 
-  Future<List<ListStory>> getstory(int page) async {
+    size = size++;
     GetAllStoryUsecase story = ref.read(getAllStoryUsecaseProvider);
-    var result = await story(page); // Memasukkan page sebagai parameter
+    var result = await story(AllStoryParams(size: size, page: page ?? 1));
+    print(_story.length);
+    print(_story);
+    _isLoading = true;
+    _story.addAll(result.listStory);
+    page = 0;
+    _isLoading = false;
+    if (result.listStory.length <= size) {
+      size = size + 5;
+      page = 0;
+    } else {
+      page = page! + 1;
+    }
     if (result.error != true) {
       return result
           .listStory; // Mengembalikan semua story yang didapatkan dalam batch

@@ -1,5 +1,5 @@
-import 'package:story_app/domain/model/all_story.dart';
-import 'package:story_app/domain/model/detail_story.dart';
+import 'package:story_app/domain/model/all_story_lama.dart';
+import 'package:story_app/domain/model/detail_story_lama.dart';
 
 abstract interface class StoryRepository {
   Future<String> addNewStory({
@@ -10,7 +10,8 @@ abstract interface class StoryRepository {
     double lat,
     double lon,
   });
-  Future<AllStoryModel> getAllStory({required String token});
+  Future<AllStoryModel> getAllStory(
+      {required String token, required int sizeItems, required int page});
   Future<DetailStoryModel> getDetailStory(
       {required String id, required String token});
 }
