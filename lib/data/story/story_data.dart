@@ -1,8 +1,8 @@
 import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:story_app/data/repository/story_repository.dart';
-import 'package:story_app/domain/model/all_story_lama.dart';
-import 'package:story_app/domain/model/detail_story_lama.dart';
+import 'package:story_app/domain/model/all_story_model.dart';
+import 'package:story_app/domain/model/detail_story_model.dart';
 
 class StoryData implements StoryRepository {
   @override
@@ -62,7 +62,7 @@ class StoryData implements StoryRepository {
   // }
 
   @override
-  Future<AllStoryModel> getAllStory(
+  Future<ListStoryModel> getAllStory(
       {required String token,
       required int sizeItems,
       required int page}) async {
@@ -82,7 +82,7 @@ class StoryData implements StoryRepository {
         },
       );
       if (response.data != null) {
-        return AllStoryModel.fromJson(response.data);
+        return ListStoryModel.fromJson(response.data);
       } else {
         throw Exception("Error get detail stories");
       }

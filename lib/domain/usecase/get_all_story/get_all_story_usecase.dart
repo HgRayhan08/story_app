@@ -1,10 +1,10 @@
 import 'package:story_app/data/repository/shared_pref_repository.dart';
 import 'package:story_app/data/repository/story_repository.dart';
-import 'package:story_app/domain/model/all_story_lama.dart';
+import 'package:story_app/domain/model/all_story_model.dart';
 import 'package:story_app/domain/usecase/get_all_story/all_story_params.dart';
 import 'package:story_app/domain/usecase/usecase.dart';
 
-class GetAllStoryUsecase implements UseCase<AllStoryModel, AllStoryParams> {
+class GetAllStoryUsecase implements UseCase<ListStoryModel, AllStoryParams> {
   final SharedPrefRepository sharedPrefRepository;
   final StoryRepository storyRepository;
 
@@ -14,7 +14,7 @@ class GetAllStoryUsecase implements UseCase<AllStoryModel, AllStoryParams> {
   });
 
   @override
-  Future<AllStoryModel> call(AllStoryParams params) async {
+  Future<ListStoryModel> call(AllStoryParams params) async {
     final token = await sharedPrefRepository.getLogin();
     if (token != null) {
       final story = await storyRepository.getAllStory(

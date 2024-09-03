@@ -3,6 +3,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:story_app/presentasi/page/detail_story/detail_story_page.dart';
 import 'package:story_app/presentasi/page/form_create_story/form_create_story_page.dart';
 import 'package:story_app/presentasi/page/home_page/home_page.dart';
+import 'package:story_app/presentasi/page/location_user/location_user_page.dart';
 import 'package:story_app/presentasi/page/login/login_page.dart';
 import 'package:story_app/presentasi/page/registrasi/registrasi_page.dart';
 import 'package:story_app/presentasi/page/splash_screen/splash_screen_page.dart';
@@ -41,6 +42,17 @@ Raw<GoRouter> router(RouterRef ref) => GoRouter(
           path: "/Detail",
           name: "Detail",
           builder: (context, state) => DetailStoryPage(state.extra as String),
+        ),
+        GoRoute(
+          path: "/Location",
+          name: "Location",
+          builder: (context, state) {
+            final extra = state.extra as Map<String, dynamic>;
+            final lat = extra['lat'] as String;
+            final long = extra['long'] as String;
+            final name = extra['name'] as String;
+            return UserLocationPage(lat: lat, long: long, name: name);
+          },
         )
       ],
       initialLocation: "/SplashScreen",

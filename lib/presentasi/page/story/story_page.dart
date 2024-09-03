@@ -68,8 +68,9 @@ class _StoryPageState extends ConsumerState<StoryPage> {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         heroTag: "Create",
-        onPressed: () {
-          ref.read(routerProvider).pushNamed("Create");
+        onPressed: () async {
+          await ref.read(routerProvider).pushNamed("Create");
+          _onRefresh();
         },
         child: const Icon(Icons.add),
       ),
