@@ -10,16 +10,15 @@ _$LoginModelImpl _$$LoginModelImplFromJson(Map<String, dynamic> json) =>
     _$LoginModelImpl(
       error: json['error'] as bool,
       message: json['message'] as String,
-      story: json['story'] == null
-          ? null
-          : LoginResult.fromJson(json['story'] as Map<String, dynamic>),
+      loginResult:
+          LoginResult.fromJson(json['loginResult'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$$LoginModelImplToJson(_$LoginModelImpl instance) =>
     <String, dynamic>{
       'error': instance.error,
       'message': instance.message,
-      'story': instance.story,
+      'loginResult': instance.loginResult,
     };
 
 _$LoginResultImpl _$$LoginResultImplFromJson(Map<String, dynamic> json) =>

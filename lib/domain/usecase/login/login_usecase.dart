@@ -19,7 +19,7 @@ class LoginUsecase implements UseCase<LoginModel, LoginParams> {
         email: params.email, password: params.password);
     if (auth.error == false) {
       final pref = await sharedPrefRepository.saveLogin(
-        token: auth.story!.token,
+        token: auth.loginResult.token,
       );
       return auth;
     } else {

@@ -75,7 +75,7 @@ class _DetailStoryPageState extends ConsumerState<DetailStoryPage> {
                         ),
                       ),
                       SizedBox(height: height * 0.02),
-                      data.lat == 0.0
+                      data.lat == null
                           ? const SizedBox(
                               child: Text(
                                 "data tidak ada location",

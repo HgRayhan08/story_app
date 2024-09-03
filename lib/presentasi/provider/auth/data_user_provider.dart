@@ -32,7 +32,7 @@ class DataUser extends _$DataUser {
     LoginUsecase login = ref.read(loginUsecaseProvider);
     var result = await login(LoginParams(email: email, password: password));
     if (result.error != true) {
-      state = AsyncData(result.story!.token);
+      state = AsyncData(result.loginResult.token);
       return result;
     } else {
       throw Exception("Error login ");

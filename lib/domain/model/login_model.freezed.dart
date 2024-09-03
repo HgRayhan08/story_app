@@ -22,7 +22,7 @@ LoginModel _$LoginModelFromJson(Map<String, dynamic> json) {
 mixin _$LoginModel {
   bool get error => throw _privateConstructorUsedError;
   String get message => throw _privateConstructorUsedError;
-  LoginResult? get story => throw _privateConstructorUsedError;
+  LoginResult get loginResult => throw _privateConstructorUsedError;
 
   /// Serializes this LoginModel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -40,9 +40,9 @@ abstract class $LoginModelCopyWith<$Res> {
           LoginModel value, $Res Function(LoginModel) then) =
       _$LoginModelCopyWithImpl<$Res, LoginModel>;
   @useResult
-  $Res call({bool error, String message, LoginResult? story});
+  $Res call({bool error, String message, LoginResult loginResult});
 
-  $LoginResultCopyWith<$Res>? get story;
+  $LoginResultCopyWith<$Res> get loginResult;
 }
 
 /// @nodoc
@@ -62,7 +62,7 @@ class _$LoginModelCopyWithImpl<$Res, $Val extends LoginModel>
   $Res call({
     Object? error = null,
     Object? message = null,
-    Object? story = freezed,
+    Object? loginResult = null,
   }) {
     return _then(_value.copyWith(
       error: null == error
@@ -73,10 +73,10 @@ class _$LoginModelCopyWithImpl<$Res, $Val extends LoginModel>
           ? _value.message
           : message // ignore: cast_nullable_to_non_nullable
               as String,
-      story: freezed == story
-          ? _value.story
-          : story // ignore: cast_nullable_to_non_nullable
-              as LoginResult?,
+      loginResult: null == loginResult
+          ? _value.loginResult
+          : loginResult // ignore: cast_nullable_to_non_nullable
+              as LoginResult,
     ) as $Val);
   }
 
@@ -84,13 +84,9 @@ class _$LoginModelCopyWithImpl<$Res, $Val extends LoginModel>
   /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
-  $LoginResultCopyWith<$Res>? get story {
-    if (_value.story == null) {
-      return null;
-    }
-
-    return $LoginResultCopyWith<$Res>(_value.story!, (value) {
-      return _then(_value.copyWith(story: value) as $Val);
+  $LoginResultCopyWith<$Res> get loginResult {
+    return $LoginResultCopyWith<$Res>(_value.loginResult, (value) {
+      return _then(_value.copyWith(loginResult: value) as $Val);
     });
   }
 }
@@ -103,10 +99,10 @@ abstract class _$$LoginModelImplCopyWith<$Res>
       __$$LoginModelImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({bool error, String message, LoginResult? story});
+  $Res call({bool error, String message, LoginResult loginResult});
 
   @override
-  $LoginResultCopyWith<$Res>? get story;
+  $LoginResultCopyWith<$Res> get loginResult;
 }
 
 /// @nodoc
@@ -124,7 +120,7 @@ class __$$LoginModelImplCopyWithImpl<$Res>
   $Res call({
     Object? error = null,
     Object? message = null,
-    Object? story = freezed,
+    Object? loginResult = null,
   }) {
     return _then(_$LoginModelImpl(
       error: null == error
@@ -135,10 +131,10 @@ class __$$LoginModelImplCopyWithImpl<$Res>
           ? _value.message
           : message // ignore: cast_nullable_to_non_nullable
               as String,
-      story: freezed == story
-          ? _value.story
-          : story // ignore: cast_nullable_to_non_nullable
-              as LoginResult?,
+      loginResult: null == loginResult
+          ? _value.loginResult
+          : loginResult // ignore: cast_nullable_to_non_nullable
+              as LoginResult,
     ));
   }
 }
@@ -146,7 +142,8 @@ class __$$LoginModelImplCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$LoginModelImpl implements _LoginModel {
-  _$LoginModelImpl({required this.error, required this.message, this.story});
+  _$LoginModelImpl(
+      {required this.error, required this.message, required this.loginResult});
 
   factory _$LoginModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$LoginModelImplFromJson(json);
@@ -156,11 +153,11 @@ class _$LoginModelImpl implements _LoginModel {
   @override
   final String message;
   @override
-  final LoginResult? story;
+  final LoginResult loginResult;
 
   @override
   String toString() {
-    return 'LoginModel(error: $error, message: $message, story: $story)';
+    return 'LoginModel(error: $error, message: $message, loginResult: $loginResult)';
   }
 
   @override
@@ -170,12 +167,13 @@ class _$LoginModelImpl implements _LoginModel {
             other is _$LoginModelImpl &&
             (identical(other.error, error) || other.error == error) &&
             (identical(other.message, message) || other.message == message) &&
-            (identical(other.story, story) || other.story == story));
+            (identical(other.loginResult, loginResult) ||
+                other.loginResult == loginResult));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, error, message, story);
+  int get hashCode => Object.hash(runtimeType, error, message, loginResult);
 
   /// Create a copy of LoginModel
   /// with the given fields replaced by the non-null parameter values.
@@ -197,7 +195,7 @@ abstract class _LoginModel implements LoginModel {
   factory _LoginModel(
       {required final bool error,
       required final String message,
-      final LoginResult? story}) = _$LoginModelImpl;
+      required final LoginResult loginResult}) = _$LoginModelImpl;
 
   factory _LoginModel.fromJson(Map<String, dynamic> json) =
       _$LoginModelImpl.fromJson;
@@ -207,7 +205,7 @@ abstract class _LoginModel implements LoginModel {
   @override
   String get message;
   @override
-  LoginResult? get story;
+  LoginResult get loginResult;
 
   /// Create a copy of LoginModel
   /// with the given fields replaced by the non-null parameter values.

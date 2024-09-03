@@ -8,7 +8,7 @@ class LoginModel with _$LoginModel {
   factory LoginModel({
     required bool error,
     required String message,
-    LoginResult? story,
+    required LoginResult loginResult,
   }) = _LoginModel;
 
   factory LoginModel.fromJson(Map<String, dynamic> json) =>
